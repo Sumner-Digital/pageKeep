@@ -164,9 +164,8 @@ struct AddAnnotationView: View {
         Section {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Quote or Passage")
+                    Text("Quote or Passage \(Text("*").foregroundColor(.red))")
                         .font(.headline)
-                    
                     Spacer()
                     
                     Button(action: handleCameraButtonTap) {
@@ -197,8 +196,12 @@ struct AddAnnotationView: View {
             TextField("Page Number", text: $pageNumber)
                 .keyboardType(.numberPad)
         } header: {
-            Text("Page Number")
-        }
+            HStack(spacing: 2) {
+                Text("Page Number")
+                Text("*")
+                    .foregroundColor(.red)
+            }
+        } 
     }
     
     private var personalNotesSection: some View {
