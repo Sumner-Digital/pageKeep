@@ -41,7 +41,8 @@ struct AddBookView: View {
     @State private var bookDescription: String?
     @State private var isbn: String?
     @State private var googleBooksID: String?
-    
+    @State private var showingFullDescription = false
+
     @FocusState private var focusedField: Field?
     
     enum Field {
@@ -205,7 +206,15 @@ struct AddBookView: View {
                                     .foregroundColor(.secondary)
                                 Text(description)
                                     .font(.caption)
-                                    .lineLimit(4)
+                                    .lineLimit(showingFullDescription ? nil : 3)
+
+                                if description.count > 150 {
+                                    Button(action: { showingFullDescription.toggle() }) {
+                                        Text(showingFullDescription ? "Show Less" : "Show More")
+                                            .font(.caption)
+                                            .foregroundStyle(.blue)
+                                    }
+                                }
                             }
                         }
                     }
