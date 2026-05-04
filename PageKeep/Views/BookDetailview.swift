@@ -506,7 +506,7 @@ struct BookDetailView: View {
             
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Done") {
+                Button {
                     if isEditingProgress {
                         saveCurrentPage()
                     }
@@ -514,6 +514,14 @@ struct BookDetailView: View {
                         saveTotalPages()
                     }
                     focusedField = nil
+                } label: {
+                    Text("Update")
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.blue)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
             }
         }
