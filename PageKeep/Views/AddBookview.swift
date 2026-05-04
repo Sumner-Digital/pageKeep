@@ -41,7 +41,8 @@ struct AddBookView: View {
     @State private var bookDescription: String?
     @State private var isbn: String?
     @State private var googleBooksID: String?
-    
+    @State private var showingFullDescription = false
+
     @FocusState private var focusedField: Field?
     
     enum Field {
@@ -205,7 +206,19 @@ struct AddBookView: View {
                                     .foregroundColor(.secondary)
                                 Text(description)
                                     .font(.caption)
-                                    .lineLimit(4)
+                                    .lineLimit(showingFullDescription ? nil : 3)
+
+                                if description.count > 150 {
+                                    Button(action: { showingFullDescription.toggle() }) {
+                                        Text(showingFullDescription ? "Show Less" : "Show More")
+                                            .font(.caption)
+                                            .foregroundStyle(.blue)
+                                            .animation(nil, value: showingFullDescription)
+                                            .contentShape(Rectangle())
+                                    }
+                                    .buttonStyle(.plain)
+                                    .padding(.top, 4)
+                                }
                             }
                         }
                     }
@@ -285,9 +298,7 @@ struct AddBookView: View {
                             }
                             .scrollDismissesKeyboard(.immediately)
                             .contentShape(Rectangle())
-                            .onTapGesture {
-                                focusedField = nil
-            }
+                            .simultaneousGesture(TapGesture().onEnded { focusedField = nil })
             .navigationTitle("Add Book")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -330,15 +341,15 @@ struct AddBookView: View {
     }
     
     private func handleSearchChange() {
-        
+
         // Cancel existing timer
         searchTimer?.invalidate()
-        
-        // Clear selection when manually typing
-        if selectedBook != nil {
-            selectedBook = nil
-        }
-        
+
+        // If a book has been selected, the title/author onChange handlers will
+        // fire from selectBook() filling those fields programmatically. Bail
+        // out so we don't schedule another search that re-opens the dropdown.
+        guard selectedBook == nil else { return }
+
         // Start new timer for 1 second delay
         searchTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { _ in
             let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -368,8 +379,12 @@ struct AddBookView: View {
     
     
     private func selectBook(_ book: GoogleBook) {
+        // Cancel any in-flight search so the field fills below don't race
+        // with a pending API call that would re-open the dropdown.
+        searchTimer?.invalidate()
+
         selectedBook = book
-        
+
         // Fill in the form fields
         title = book.volumeInfo.title
         author = book.volumeInfo.author
