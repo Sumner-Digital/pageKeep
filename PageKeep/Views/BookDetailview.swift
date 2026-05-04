@@ -104,7 +104,59 @@ struct BookDetailView: View {
                     }
                     .padding(.horizontal)
                 }
-                
+
+                // Add Annotation Button
+                Button(action: {
+                    showingAddAnnotation = true
+                }) {
+                    HStack {
+                        Image(systemName: "quote.bubble")
+                        Text("Add Annotation")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .foregroundStyle(.white)
+                    .cornerRadius(10)
+                }
+                .padding(.horizontal)
+
+                // Status Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Status")
+                        .font(.headline)
+
+                    HStack(spacing: 12) {
+                        StatusButton(title: "Not Started", status: .notStarted, currentStatus: book.status) {
+                            book.status = .notStarted
+                            book.currentPage = 0
+                            book.dateModified = Date()
+                        }
+
+                        StatusButton(title: "Reading", status: .reading, currentStatus: book.status) {
+                            book.status = .reading
+                            book.dateModified = Date()
+                        }
+
+                        StatusButton(title: "Completed", status: .completed, currentStatus: book.status) {
+                            book.status = .completed
+                            book.currentPage = book.totalPages
+                            book.dateModified = Date()
+                            book.dateCompleted = Date()
+
+                            // Celebration haptic feedback
+                               let success = UINotificationFeedbackGenerator()
+                               success.notificationOccurred(.success)
+                        }
+
+                        StatusButton(title: "Abandoned", status: .abandoned, currentStatus: book.status) {
+                            showAbandonConfirmation = true
+                        }
+                    }
+                    .font(.caption)
+                }
+                .padding(.horizontal)
+
                 // Reading Progress Section
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Reading Progress")
@@ -216,58 +268,6 @@ struct BookDetailView: View {
                             }
                         }
                     }
-                }
-                .padding(.horizontal)
-                
-                // Status Section
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Status")
-                        .font(.headline)
-                    
-                    HStack(spacing: 12) {
-                        StatusButton(title: "Not Started", status: .notStarted, currentStatus: book.status) {
-                            book.status = .notStarted
-                            book.currentPage = 0
-                            book.dateModified = Date()
-                        }
-                        
-                        StatusButton(title: "Reading", status: .reading, currentStatus: book.status) {
-                            book.status = .reading
-                            book.dateModified = Date()
-                        }
-                        
-                        StatusButton(title: "Completed", status: .completed, currentStatus: book.status) {
-                            book.status = .completed
-                            book.currentPage = book.totalPages
-                            book.dateModified = Date()
-                            book.dateCompleted = Date()
-                            
-                            // Celebration haptic feedback
-                               let success = UINotificationFeedbackGenerator()
-                               success.notificationOccurred(.success)
-                        }
-                        
-                        StatusButton(title: "Abandoned", status: .abandoned, currentStatus: book.status) {
-                            showAbandonConfirmation = true
-                        }
-                    }
-                    .font(.caption)
-                }
-                .padding(.horizontal)
-                
-                // Add Annotation Button
-                Button(action: {
-                    showingAddAnnotation = true
-                }) {
-                    HStack {
-                        Image(systemName: "quote.bubble")
-                        Text("Add Annotation")
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundStyle(.white)
-                    .cornerRadius(10)
                 }
                 .padding(.horizontal)
                 
