@@ -294,9 +294,7 @@ struct AddBookView: View {
                             }
                             .scrollDismissesKeyboard(.immediately)
                             .contentShape(Rectangle())
-                            .onTapGesture {
-                                focusedField = nil
-            }
+                            .simultaneousGesture(TapGesture().onEnded { focusedField = nil })
             .navigationTitle("Add Book")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
