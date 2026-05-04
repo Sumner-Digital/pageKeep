@@ -301,10 +301,11 @@ struct AddBookView: View {
                         Text("Add to Bookshelf")
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
+                            .background(canSave ? Color.blue : Color.gray)
                             .foregroundStyle(.white)
                             .cornerRadius(10)
                     }
+                    .buttonStyle(.plain)
                     .disabled(!canSave)
                     .listRowBackground(Color.clear)
                 }
