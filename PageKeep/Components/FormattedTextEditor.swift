@@ -33,7 +33,9 @@ struct FormattedTextEditor: UIViewRepresentable {
         textView.layer.cornerRadius = 8
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         textView.isScrollEnabled = true
-        
+        textView.autocapitalizationType = .sentences
+        textView.autocorrectionType = .no
+
         // Store textView reference in coordinator
         context.coordinator.textView = textView
         

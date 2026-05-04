@@ -226,6 +226,8 @@ struct AddAnnotationView: View {
         Section {
             TextField("Optional notes about this passage", text: $personalNotes, axis: .vertical)
                 .lineLimit(3...6)
+                .textInputAutocapitalization(.sentences)
+                .autocorrectionDisabled(true)
                 .focused($focusedField, equals: .personalNotes)
         } header: {
             Text("Personal Notes (Optional)")
