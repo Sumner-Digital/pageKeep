@@ -51,7 +51,18 @@ struct AddAnnotationView: View {
     // MARK: - State - OCR Warning
     @AppStorage("hideOCRWarning") private var hideOCRWarning = false
     @State private var showingOCRWarning = false
-    
+
+    // MARK: - Focus
+
+    @FocusState private var focusedField: Field?
+
+    // FormattedTextEditor (quote) is a UIViewRepresentable wrapping UITextView,
+    // so SwiftUI's .focused() doesn't apply. The tap-to-dismiss handler sends
+    // resignFirstResponder via UIApplication to dismiss its keyboard too.
+    enum Field {
+        case pageNumber, personalNotes
+    }
+
     // MARK: - Initialization
     
     init(book: Book, annotation: Annotation? = nil) {
@@ -158,6 +169,12 @@ struct AddAnnotationView: View {
             personalNotesSection
             genreColorSection
         }
+        .scrollDismissesKeyboard(.immediately)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            focusedField = nil
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
     }
     
     private var quoteSection: some View {
@@ -195,6 +212,7 @@ struct AddAnnotationView: View {
         Section {
             TextField("Page Number", text: $pageNumber)
                 .keyboardType(.numberPad)
+                .focused($focusedField, equals: .pageNumber)
         } header: {
             HStack(spacing: 2) {
                 Text("Page Number")
@@ -208,6 +226,7 @@ struct AddAnnotationView: View {
         Section {
             TextField("Optional notes about this passage", text: $personalNotes, axis: .vertical)
                 .lineLimit(3...6)
+                .focused($focusedField, equals: .personalNotes)
         } header: {
             Text("Personal Notes (Optional)")
         }
