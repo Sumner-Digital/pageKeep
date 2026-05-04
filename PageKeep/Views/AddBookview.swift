@@ -295,6 +295,19 @@ struct AddBookView: View {
                                             .foregroundStyle(.secondary)
                                     }
                                 }
+
+                Section {
+                    Button(action: { addBook() }) {
+                        Text("Add to Bookshelf")
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundStyle(.white)
+                            .cornerRadius(10)
+                    }
+                    .disabled(!canSave)
+                    .listRowBackground(Color.clear)
+                }
                             }
                             .scrollDismissesKeyboard(.immediately)
                             .contentShape(Rectangle())
