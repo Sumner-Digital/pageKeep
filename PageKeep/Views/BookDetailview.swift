@@ -99,7 +99,10 @@ struct BookDetailView: View {
                                 Text(showingFullDescription ? "Show Less" : "Show More")
                                     .font(.caption)
                                     .foregroundStyle(.blue)
+                                    .contentShape(Rectangle())
                             }
+                            .buttonStyle(.plain)
+                            .padding(.top, 4)
                         }
                     }
                     .padding(.horizontal)
