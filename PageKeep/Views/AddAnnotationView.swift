@@ -271,6 +271,24 @@ struct AddAnnotationView: View {
             }
             .disabled(!canSave)
         }
+
+        // Explicit keyboard toolbar replaces iOS's auto-injected Done button
+        // for .numberPad fields, which appears but whose tap action is dropped
+        // during constraint recovery (broken on iOS 18.2 and 26.1).
+        ToolbarItemGroup(placement: .keyboard) {
+            Spacer()
+            Button {
+                focusedField = nil
+            } label: {
+                Image(systemName: "checkmark")
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Color.blue)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+        }
     }
     
     @ViewBuilder
