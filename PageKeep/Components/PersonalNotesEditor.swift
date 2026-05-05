@@ -19,7 +19,7 @@ struct PersonalNotesEditor: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
+        let textView = WrappingTextView()
         textView.delegate = context.coordinator
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.backgroundColor = .clear
@@ -87,5 +87,22 @@ struct PersonalNotesEditor: UIViewRepresentable {
                 parent.text = textView.text
             }
         }
+    }
+}
+
+/// UITextView subclass that pins its text container's wrap width to the
+/// view's actual rendered width on every layout pass. Fixes long-line
+/// overflow that earlier defenses (`widthTracksTextView`,
+/// `lineBreakMode = .byWordWrapping`, SwiftUI `.frame(maxWidth: .infinity)`)
+/// did not catch on their own — `updateUIView` is not called for layout-only
+/// changes (rotation, keyboard show/hide, dynamic type), but
+/// `layoutSubviews` runs on every layout pass.
+private final class WrappingTextView: UITextView {
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        textContainer.size = CGSize(
+            width: bounds.width,
+            height: .greatestFiniteMagnitude
+        )
     }
 }
