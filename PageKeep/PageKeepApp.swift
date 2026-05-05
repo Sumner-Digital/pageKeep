@@ -9,9 +9,20 @@
 
 import SwiftUI
 import SwiftData
+import UIKit
 
 @main
 struct PageKeepApp: App {
+
+    init() {
+        // Force spell-check on globally for every UITextField/UITextView,
+        // overriding iOS's default heuristic that turns spell-check off when
+        // autocorrect is off (Phase 4.5 disabled autocorrect on the Add
+        // Annotation fields, which silently took spell-check with it).
+        UITextField.appearance().spellCheckingType = .yes
+        UITextView.appearance().spellCheckingType = .yes
+    }
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Book.self,
