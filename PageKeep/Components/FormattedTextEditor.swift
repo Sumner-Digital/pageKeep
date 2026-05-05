@@ -35,6 +35,7 @@ struct FormattedTextEditor: UIViewRepresentable {
         textView.isScrollEnabled = true
         textView.autocapitalizationType = .sentences
         textView.autocorrectionType = .no
+        textView.spellCheckingType = .yes
 
         // Store textView reference in coordinator
         context.coordinator.textView = textView
