@@ -31,6 +31,11 @@ struct PersonalNotesEditor: UIViewRepresentable {
         textView.autocorrectionType = .no
         textView.spellCheckingType = .yes
 
+        // Word-wrap long lines at the text view's width instead of letting
+        // the content grow horizontally past the right edge.
+        textView.textContainer.widthTracksTextView = true
+        textView.textContainer.lineBreakMode = .byWordWrapping
+
         // Initial state with placeholder handling
         if text.isEmpty {
             textView.text = placeholder

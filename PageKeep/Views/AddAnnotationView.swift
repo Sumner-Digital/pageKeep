@@ -225,7 +225,7 @@ struct AddAnnotationView: View {
     private var personalNotesSection: some View {
         Section {
             PersonalNotesEditor(text: $personalNotes, placeholder: "Optional notes about this passage")
-                .frame(minHeight: 80, maxHeight: 200)
+                .frame(maxWidth: .infinity, minHeight: 80, maxHeight: 200)
                 .focused($focusedField, equals: .personalNotes)
         } header: {
             Text("Personal Notes (Optional)")
