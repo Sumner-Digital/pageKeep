@@ -19,22 +19,20 @@ struct PersonalNotesEditor: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> UITextView {
-        let textView = WrappingTextView()
+        let textView = UITextView()
         textView.delegate = context.coordinator
         textView.font = UIFont.preferredFont(forTextStyle: .body)
         textView.backgroundColor = .clear
-        textView.isScrollEnabled = false
+        // Scroll enabled so the SwiftUI .frame on the wrapper is the source
+        // of truth for size — matches FormattedTextEditor and lets long
+        // lines wrap correctly at the right edge.
+        textView.isScrollEnabled = true
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
 
         // The whole reason this wrapper exists:
         textView.autocapitalizationType = .sentences
         textView.autocorrectionType = .no
         textView.spellCheckingType = .yes
-
-        // Word-wrap long lines at the text view's width instead of letting
-        // the content grow horizontally past the right edge.
-        textView.textContainer.widthTracksTextView = true
-        textView.textContainer.lineBreakMode = .byWordWrapping
 
         // Initial state with placeholder handling
         if text.isEmpty {
@@ -87,22 +85,5 @@ struct PersonalNotesEditor: UIViewRepresentable {
                 parent.text = textView.text
             }
         }
-    }
-}
-
-/// UITextView subclass that pins its text container's wrap width to the
-/// view's actual rendered width on every layout pass. Fixes long-line
-/// overflow that earlier defenses (`widthTracksTextView`,
-/// `lineBreakMode = .byWordWrapping`, SwiftUI `.frame(maxWidth: .infinity)`)
-/// did not catch on their own — `updateUIView` is not called for layout-only
-/// changes (rotation, keyboard show/hide, dynamic type), but
-/// `layoutSubviews` runs on every layout pass.
-private final class WrappingTextView: UITextView {
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        textContainer.size = CGSize(
-            width: bounds.width,
-            height: .greatestFiniteMagnitude
-        )
     }
 }
