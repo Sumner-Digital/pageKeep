@@ -170,11 +170,6 @@ struct AddAnnotationView: View {
             genreColorSection
         }
         .scrollDismissesKeyboard(.immediately)
-        .contentShape(Rectangle())
-        .simultaneousGesture(TapGesture().onEnded {
-            focusedField = nil
-            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-        })
     }
     
     private var quoteSection: some View {
