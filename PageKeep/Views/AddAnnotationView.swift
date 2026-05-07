@@ -270,20 +270,15 @@ struct AddAnnotationView: View {
         // Explicit keyboard toolbar replaces iOS's auto-injected Done button
         // for .numberPad fields, which appears but whose tap action is dropped
         // during constraint recovery (broken on iOS 18.2 and 26.1).
-        // Styling matches the FormattedTextEditor's UIToolbar Done button
-        // (UIBarButtonItem .done at FormattedTextEditor.swift:66) so the
-        // keyboard accessory looks consistent across all three fields.
+        // Uses a plain Button so SwiftUI/iOS 26 styles it identically to
+        // FormattedTextEditor's system Done bar button
+        // (FormattedTextEditor.swift:69), keeping all three fields visually
+        // consistent.
         ToolbarItemGroup(placement: .keyboard) {
             Spacer()
-            Button {
+            Button("Done") {
                 focusedField = nil
-            } label: {
-                Image(systemName: "checkmark")
             }
-            .buttonStyle(.glassProminent)
-            .tint(.blue)
-            .buttonBorderShape(.circle)
-            .controlSize(.large)
         }
     }
     

@@ -34,30 +34,14 @@ struct PersonalNotesEditor: UIViewRepresentable {
         textView.autocorrectionType = .no
         textView.spellCheckingType = .yes
 
-        // Keyboard accessory: filled blue circle with a white checkmark,
-        // right-aligned. Matches Page Number's SwiftUI .glassProminent
-        // visual (solid blue circle, light checkmark) so the two
-        // accessories read as siblings rather than cousins. UIKit's
-        // closest equivalent is a UIButton with a filled configuration
-        // and capsule corner style at equal width/height.
+        // Keyboard accessory: a single right-aligned system Done bar button.
+        // Same primitive (UIBarButtonItem barButtonSystemItem: .done) as
+        // FormattedTextEditor.swift:69, so SwiftUI/iOS renders it identically
+        // wherever it appears.
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-
-        var buttonConfig = UIButton.Configuration.filled()
-        buttonConfig.baseBackgroundColor = .systemBlue
-        buttonConfig.baseForegroundColor = .white
-        buttonConfig.cornerStyle = .capsule
-        buttonConfig.image = UIImage(systemName: "checkmark")
-        let button = UIButton(configuration: buttonConfig)
-        button.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
-        button.addTarget(
-            context.coordinator,
-            action: #selector(Coordinator.dismissKeyboard),
-            for: .touchUpInside
-        )
-
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(customView: button)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: context.coordinator, action: #selector(Coordinator.dismissKeyboard))
         toolbar.items = [flexSpace, doneButton]
         textView.inputAccessoryView = toolbar
 
