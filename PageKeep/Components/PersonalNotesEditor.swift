@@ -34,20 +34,30 @@ struct PersonalNotesEditor: UIViewRepresentable {
         textView.autocorrectionType = .no
         textView.spellCheckingType = .yes
 
-        // Keyboard accessory: single right-aligned blue checkmark.
-        // Mirrors the visual of the SwiftUI .glassProminent button on the
-        // Page Number field — UIKit can't replicate Liquid Glass exactly,
-        // but same color, glyph, and right alignment is what matters.
+        // Keyboard accessory: filled blue circle with a white checkmark,
+        // right-aligned. Matches Page Number's SwiftUI .glassProminent
+        // visual (solid blue circle, light checkmark) so the two
+        // accessories read as siblings rather than cousins. UIKit's
+        // closest equivalent is a UIButton with a filled configuration
+        // and capsule corner style at equal width/height.
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(
-            image: UIImage(systemName: "checkmark"),
-            style: .plain,
-            target: context.coordinator,
-            action: #selector(Coordinator.dismissKeyboard)
+
+        var buttonConfig = UIButton.Configuration.filled()
+        buttonConfig.baseBackgroundColor = .systemBlue
+        buttonConfig.baseForegroundColor = .white
+        buttonConfig.cornerStyle = .capsule
+        buttonConfig.image = UIImage(systemName: "checkmark")
+        let button = UIButton(configuration: buttonConfig)
+        button.frame = CGRect(x: 0, y: 0, width: 32, height: 32)
+        button.addTarget(
+            context.coordinator,
+            action: #selector(Coordinator.dismissKeyboard),
+            for: .touchUpInside
         )
-        doneButton.tintColor = .systemBlue
+
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(customView: button)
         toolbar.items = [flexSpace, doneButton]
         textView.inputAccessoryView = toolbar
 
