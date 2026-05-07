@@ -276,9 +276,19 @@ struct AddAnnotationView: View {
         // consistent.
         ToolbarItemGroup(placement: .keyboard) {
             Spacer()
-            Button("Done") {
+            Button {
                 focusedField = nil
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(Color.blue)
+                        .frame(width: 30, height: 30)
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(.white)
+                        .font(.system(size: 15, weight: .semibold))
+                }
             }
+            .buttonStyle(.plain)
         }
     }
     
