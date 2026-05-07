@@ -205,8 +205,7 @@ struct AddAnnotationView: View {
     
     private var pageNumberSection: some View {
         Section {
-            TextField("Page Number", text: $pageNumber)
-                .keyboardType(.numberPad)
+            PageNumberField(text: $pageNumber, placeholder: "Page Number")
                 .focused($focusedField, equals: .pageNumber)
         } header: {
             HStack(spacing: 2) {
@@ -267,29 +266,6 @@ struct AddAnnotationView: View {
             .disabled(!canSave)
         }
 
-        // Explicit keyboard toolbar replaces iOS's auto-injected Done button
-        // for .numberPad fields, which appears but whose tap action is dropped
-        // during constraint recovery (broken on iOS 18.2 and 26.1).
-        // Uses a plain Button so SwiftUI/iOS 26 styles it identically to
-        // FormattedTextEditor's system Done bar button
-        // (FormattedTextEditor.swift:69), keeping all three fields visually
-        // consistent.
-        ToolbarItemGroup(placement: .keyboard) {
-            Spacer()
-            Button {
-                focusedField = nil
-            } label: {
-                ZStack {
-                    Circle()
-                        .fill(Color.blue)
-                        .frame(width: 30, height: 30)
-                    Image(systemName: "checkmark")
-                        .foregroundStyle(.white)
-                        .font(.system(size: 15, weight: .semibold))
-                }
-            }
-            .buttonStyle(.plain)
-        }
     }
     
     @ViewBuilder
