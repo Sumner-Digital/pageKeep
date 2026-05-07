@@ -34,6 +34,27 @@ struct PersonalNotesEditor: UIViewRepresentable {
         textView.autocorrectionType = .no
         textView.spellCheckingType = .yes
 
+        // Keyboard accessory: single right-aligned blue checkmark.
+        // Mirrors the visual of the SwiftUI .glassProminent button on the
+        // Page Number field — UIKit can't replicate Liquid Glass exactly,
+        // but same color, glyph, and right alignment is what matters.
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(
+            image: UIImage(systemName: "checkmark"),
+            style: .plain,
+            target: context.coordinator,
+            action: #selector(Coordinator.dismissKeyboard)
+        )
+        doneButton.tintColor = .systemBlue
+        toolbar.items = [flexSpace, doneButton]
+        textView.inputAccessoryView = toolbar
+
+        // Stash the textView reference so the coordinator's dismissKeyboard
+        // can resign it.
+        context.coordinator.textView = textView
+
         // Initial state with placeholder handling
         if text.isEmpty {
             textView.text = placeholder
@@ -61,9 +82,14 @@ struct PersonalNotesEditor: UIViewRepresentable {
 
     class Coordinator: NSObject, UITextViewDelegate {
         let parent: PersonalNotesEditor
+        weak var textView: UITextView?
 
         init(_ parent: PersonalNotesEditor) {
             self.parent = parent
+        }
+
+        @objc func dismissKeyboard() {
+            textView?.resignFirstResponder()
         }
 
         func textViewDidBeginEditing(_ textView: UITextView) {
